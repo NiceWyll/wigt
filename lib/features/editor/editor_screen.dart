@@ -193,8 +193,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-
     if (_isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
@@ -217,136 +215,127 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           _isEditing ? 'Editar pendiente' : 'Nuevo pendiente',
           style: AppText.headlineMedium,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check, color: AppColors.primary),
+            tooltip: _isEditing ? 'Guardar cambios' : 'Crear pendiente',
+            onPressed: _isSaving ? null : _save,
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: AppDimens.screenMarginH),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    // Campo título
-                    AppTextField(
-                      controller: _titleController,
-                      hint: '¿Qué tienes que hacer?',
-                      label: 'Título',
-                      autofocus: !_isEditing,
-                      error: _titleError,
-                      textInputAction: TextInputAction.next,
-                      onChanged: (val) {
-                        if (_titleError != null && val.trim().isNotEmpty) {
-                          setState(() => _titleError = null);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    // Campo notas
-                    AppTextField(
-                      controller: _notesController,
-                      hint: 'Notas adicionales (opcional)',
-                      label: 'Notas',
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 24),
-                    // Selector de fecha
-                    Text('Fecha', style: AppText.labelSmall),
-                    const SizedBox(height: 8),
-                    InkWell(
-                      onTap: _selectDate,
-                      borderRadius: BorderRadius.circular(AppDimens.radiusField),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(AppDimens.radiusField),
-                          border: Border.all(color: AppColors.outline),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.calendar_today, size: 18, color: AppColors.primaryLight),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                LimaTime.formatFullDate(_selectedDate),
-                                style: AppText.bodyMedium.copyWith(color: AppColors.onBackground),
-                              ),
-                            ),
-                            Text(
-                              _selectedDate,
-                              style: AppText.monoSmall.copyWith(color: AppColors.onMuted),
-                            ),
-                          ],
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: const EdgeInsets.symmetric(horizontal: AppDimens.screenMarginH),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              // Campo título
+              AppTextField(
+                controller: _titleController,
+                hint: '¿Qué tienes que hacer?',
+                label: 'Título',
+                autofocus: !_isEditing,
+                error: _titleError,
+                textInputAction: TextInputAction.next,
+                onChanged: (val) {
+                  if (_titleError != null && val.trim().isNotEmpty) {
+                    setState(() => _titleError = null);
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              // Campo notas
+              AppTextField(
+                controller: _notesController,
+                hint: 'Notas adicionales (opcional)',
+                label: 'Notas',
+                maxLines: 3,
+              ),
+              const SizedBox(height: 24),
+              // Selector de fecha
+              Text('Fecha', style: AppText.labelSmall),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: _selectDate,
+                borderRadius: BorderRadius.circular(AppDimens.radiusField),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppDimens.radiusField),
+                    border: Border.all(color: AppColors.outline),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today, size: 18, color: AppColors.primaryLight),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          LimaTime.formatFullDate(_selectedDate),
+                          style: AppText.bodyMedium.copyWith(color: AppColors.onBackground),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Selector de hora
-                    Text('Hora (opcional)', style: AppText.labelSmall),
-                    const SizedBox(height: 8),
-                    InkWell(
-                      onTap: _selectTime,
-                      borderRadius: BorderRadius.circular(AppDimens.radiusField),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(AppDimens.radiusField),
-                          border: Border.all(color: AppColors.outline),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.access_time, size: 18, color: AppColors.primaryLight),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                _selectedTimeMinutes != null
-                                    ? LimaTime.minutesToHHmm(_selectedTimeMinutes!)
-                                    : 'Todo el día',
-                                style: _selectedTimeMinutes != null
-                                    ? AppText.monoMedium.copyWith(color: AppColors.primaryLight)
-                                    : AppText.bodyMedium.copyWith(color: AppColors.onMuted),
-                              ),
-                            ),
-                            if (_selectedTimeMinutes != null)
-                              IconButton(
-                                icon: const Icon(Icons.close, size: 18, color: AppColors.onMuted),
-                                onPressed: _clearTime,
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                tooltip: 'Quitar hora',
-                              ),
-                          ],
-                        ),
+                      Text(
+                        _selectedDate,
+                        style: AppText.monoSmall.copyWith(color: AppColors.onMuted),
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // Botón Guardar fijo abajo, respeta viewInsets.bottom para subir con teclado
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                AppDimens.screenMarginH,
-                12,
-                AppDimens.screenMarginH,
-                12 + bottomInset,
+              const SizedBox(height: 20),
+              // Selector de hora
+              Text('Hora (opcional)', style: AppText.labelSmall),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: _selectTime,
+                borderRadius: BorderRadius.circular(AppDimens.radiusField),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppDimens.radiusField),
+                    border: Border.all(color: AppColors.outline),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.access_time, size: 18, color: AppColors.primaryLight),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _selectedTimeMinutes != null
+                              ? LimaTime.minutesToHHmm(_selectedTimeMinutes!)
+                              : 'Todo el día',
+                          style: _selectedTimeMinutes != null
+                              ? AppText.monoMedium.copyWith(color: AppColors.primaryLight)
+                              : AppText.bodyMedium.copyWith(color: AppColors.onMuted),
+                        ),
+                      ),
+                      if (_selectedTimeMinutes != null)
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 18, color: AppColors.onMuted),
+                          onPressed: _clearTime,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'Quitar hora',
+                        ),
+                    ],
+                  ),
+                ),
               ),
-              decoration: const BoxDecoration(
-                color: AppColors.surface,
-                border: Border(top: BorderSide(color: AppColors.outline)),
-              ),
-              child: AppButton(
+              const SizedBox(height: 32),
+              // Botón Guardar / Crear
+              AppButton(
                 label: _isEditing ? 'Guardar cambios' : 'Crear pendiente',
                 isLoading: _isSaving,
                 onPressed: _save,
                 minWidth: double.infinity,
               ),
-            ),
-          ],
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
