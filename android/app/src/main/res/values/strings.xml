@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wigt</string>
+    <string name="widget_name">Wigt - Pendientes</string>
+    <string name="widget_description">Muestra los pendientes del día en tu pantalla de inicio.</string>
+</resources>

@@ -7,6 +7,8 @@ import '../../core/theme/app_text.dart';
 import '../../core/theme/dimens.dart';
 import '../../core/time/lima_time.dart';
 import '../../core/widgets/task_row.dart';
+import '../../core/widgets/home_widget_service.dart';
+import '../../data/db/app_database.dart';
 import '../../data/db/providers.dart';
 import '../../data/holidays/holiday_providers.dart';
 
@@ -183,6 +185,7 @@ class DayScreen extends ConsumerWidget {
                         onDismissed: (_) async {
                           HapticFeedback.lightImpact();
                           await repo.deleteTask(task.id);
+                          HomeWidgetService.updateTodayWidget(ref);
 
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).clearSnackBars();
@@ -218,6 +221,9 @@ class DayScreen extends ConsumerWidget {
                           onTap: () {
                             context.push('/editor?taskId=${task.id}&date=$date');
                           },
+                          onLongPress: () {
+                            _showTaskOptions(context, ref, task);
+                          },
                         ),
                       );
                     },
@@ -228,6 +234,95 @@ class DayScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showTaskOptions(BuildContext context, WidgetRef ref, Task task) {
+    HapticFeedback.selectionClick();
+    final repo = ref.read(taskRepositoryProvider);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.radiusCard)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  child: Text(
+                    task.title,
+                    style: AppText.titleMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Divider(color: AppColors.outline),
+                ListTile(
+                  leading: Icon(
+                    task.isDone ? Icons.radio_button_unchecked : Icons.check_circle_outline,
+                    color: AppColors.primaryLight,
+                  ),
+                  title: Text(
+                    task.isDone ? 'Marcar como pendiente' : 'Marcar como completada',
+                    style: AppText.bodyMedium,
+                  ),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    repo.setDone(task.id, done: !task.isDone);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit_outlined, color: AppColors.primary),
+                  title: Text('Editar pendiente', style: AppText.bodyMedium),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    context.push('/editor?taskId=${task.id}&date=${task.date}');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete_outline, color: AppColors.danger),
+                  title: const Text(
+                    'Eliminar pendiente',
+                    style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await repo.deleteTask(task.id);
+                    HomeWidgetService.updateTodayWidget(ref);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('"${task.title}" eliminado'),
+                          action: SnackBarAction(
+                            label: 'Deshacer',
+                            textColor: AppColors.primaryLight,
+                            onPressed: () async {
+                              await repo.createTask(
+                                title: task.title,
+                                notes: task.notes,
+                                date: task.date,
+                                timeMinutes: task.timeMinutes,
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

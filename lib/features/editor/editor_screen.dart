@@ -8,6 +8,7 @@ import '../../core/theme/dimens.dart';
 import '../../core/time/lima_time.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/home_widget_service.dart';
 import '../../data/db/providers.dart';
 
 /// Pantalla para crear o editar un pendiente.
@@ -177,6 +178,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       }
 
       HapticFeedback.lightImpact();
+      HomeWidgetService.updateTodayWidget(ref);
       if (mounted) {
         if (context.canPop()) {
           context.pop();
@@ -187,6 +189,63 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final title = _titleController.text.trim();
+    final displayName = title.isEmpty ? 'este pendiente' : '"$title"';
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+          side: const BorderSide(color: AppColors.outline),
+        ),
+        title: Text('¿Eliminar pendiente?', style: AppText.headlineMedium),
+        content: Text(
+          '¿Estás seguro de que deseas eliminar $displayName? Esta acción no se puede deshacer.',
+          style: AppText.bodyMedium.copyWith(color: AppColors.onMuted),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancelar', style: AppText.bodyMedium.copyWith(color: AppColors.onMuted)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text(
+              'Eliminar',
+              style: TextStyle(
+                color: AppColors.danger,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final repo = ref.read(taskRepositoryProvider);
+      await repo.deleteTask(widget.taskId!);
+      HapticFeedback.lightImpact();
+      HomeWidgetService.updateTodayWidget(ref);
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(title.isNotEmpty ? 'Pendiente "$title" eliminado' : 'Pendiente eliminado'),
+          ),
+        );
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/day/$_selectedDate');
+        }
       }
     }
   }
@@ -216,6 +275,12 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           style: AppText.headlineMedium,
         ),
         actions: [
+          if (_isEditing)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: AppColors.danger),
+              tooltip: 'Eliminar pendiente',
+              onPressed: _isSaving ? null : _confirmDelete,
+            ),
           IconButton(
             icon: const Icon(Icons.check, color: AppColors.primary),
             tooltip: _isEditing ? 'Guardar cambios' : 'Crear pendiente',
@@ -333,6 +398,28 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                 onPressed: _save,
                 minWidth: double.infinity,
               ),
+              if (_isEditing) ...[
+                const SizedBox(height: 16),
+                OutlinedButton.icon(
+                  onPressed: _isSaving ? null : _confirmDelete,
+                  icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20),
+                  label: const Text(
+                    'Eliminar pendiente',
+                    style: TextStyle(
+                      color: AppColors.danger,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.danger.withValues(alpha: 0.5)),
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppDimens.radiusButton),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 32),
             ],
           ),

@@ -14,6 +14,7 @@ class TaskRow extends StatelessWidget {
     required this.isDone,
     required this.onToggle,
     this.onTap,
+    this.onLongPress,
     this.isOverdue = false,
   });
 
@@ -23,6 +24,7 @@ class TaskRow extends StatelessWidget {
   final bool isDone;
   final VoidCallback onToggle;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final bool isOverdue;
 
   @override
@@ -32,6 +34,7 @@ class TaskRow extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

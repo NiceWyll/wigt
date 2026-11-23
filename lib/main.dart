@@ -1,15 +1,19 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
+import 'core/widgets/home_widget_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Inicializar zonas horarias
   tz_data.initializeTimeZones();
+
+  // Inicializar Widget de pantalla de inicio
+  await HomeWidgetService.init();
 
   // Edge-to-edge y barra de sistema transparente (2.2 Pantallas seguras)
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

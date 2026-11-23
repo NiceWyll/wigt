@@ -79,3 +79,4 @@ jobs:
         with:
           name: Wigt-Android-APK
           path: build/app/outputs/flutter-apk/app-release.apk
+
