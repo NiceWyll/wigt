@@ -1,0 +1,228 @@
+{
+  "holidays": [
+    {
+      "date": "2026-01-01",
+      "name": "Año Nuevo",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional fijo — pendiente de verificación en El Peruano"
+    },
+    {
+      "date": "2026-04-02",
+      "name": "Jueves Santo",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Fecha calculada — pendiente verificación oficial"
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Viernes Santo",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Fecha calculada — pendiente verificación oficial"
+    },
+    {
+      "date": "2026-05-01",
+      "name": "Día del Trabajo",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional fijo — pendiente verificación"
+    },
+    {
+      "date": "2026-06-07",
+      "name": "Batalla de Arica",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional — pendiente verificación"
+    },
+    {
+      "date": "2026-06-29",
+      "name": "San Pedro y San Pablo",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional — pendiente verificación"
+    },
+    {
+      "date": "2026-07-28",
+      "name": "Fiestas Patrias",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional fijo — pendiente verificación"
+    },
+    {
+      "date": "2026-07-29",
+      "name": "Fiestas Patrias",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional fijo — pendiente verificación"
+    },
+    {
+      "date": "2026-08-30",
+      "name": "Santa Rosa de Lima",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional — pendiente verificación"
+    },
+    {
+      "date": "2026-10-08",
+      "name": "Combate de Angamos",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional — pendiente verificación"
+    },
+    {
+      "date": "2026-11-01",
+      "name": "Todos los Santos",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": null,
+      "note": "Feriado nacional — pendiente verificación"
+    },
+    {
+      "date": "2026-12-08",
+      "name": "Inmaculada Concepción",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": "2026-11-22",
+      "note": "Confirmado en README del proyecto"
+    },
+    {
+      "date": "2026-12-09",
+      "name": "Batalla de Ayacucho",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": "2026-11-22",
+      "note": "Confirmado en README del proyecto"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Navidad",
+      "type": "feriado",
+      "provisional": false,
+      "verifiedOn": "2026-11-22",
+      "note": "Confirmado en README del proyecto"
+    },
+    {
+      "date": "2027-01-01",
+      "name": "Año Nuevo",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — el Gobierno evalúa mover feriados en 2027; verificar en El Peruano cuando se publique la norma"
+    },
+    {
+      "date": "2027-04-01",
+      "name": "Jueves Santo",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — fecha calculada; puede cambiar si el Gobierno mueve el feriado"
+    },
+    {
+      "date": "2027-04-02",
+      "name": "Viernes Santo",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — fecha calculada; puede cambiar si el Gobierno mueve el feriado"
+    },
+    {
+      "date": "2027-05-01",
+      "name": "Día del Trabajo",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse a viernes cercano en 2027"
+    },
+    {
+      "date": "2027-06-07",
+      "name": "Batalla de Arica",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-06-29",
+      "name": "San Pedro y San Pablo",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-07-28",
+      "name": "Fiestas Patrias",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-07-29",
+      "name": "Fiestas Patrias",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-08-30",
+      "name": "Santa Rosa de Lima",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-10-08",
+      "name": "Combate de Angamos",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-11-01",
+      "name": "Todos los Santos",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-12-08",
+      "name": "Inmaculada Concepción",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-12-09",
+      "name": "Batalla de Ayacucho",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    },
+    {
+      "date": "2027-12-25",
+      "name": "Navidad",
+      "type": "feriado",
+      "provisional": true,
+      "verifiedOn": null,
+      "note": "Provisional — puede moverse en 2027"
+    }
+  ]
+}

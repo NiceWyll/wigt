@@ -1,0 +1,116 @@
+##############################################################
+# Wigt — Codemagic CI/CD
+# Genera un .ipa con firma personal (sin cuenta de pago Apple)
+# listo para instalar con Sideloadly en tu iPhone.
+#
+# Instrucciones completas: docs/CODEMAGIC_SETUP.md
+##############################################################
+
+workflows:
+
+  # ─────────────────────────────────────────────
+  # 1. iOS para Sideloadly (firma con cert. personal)
+  # ─────────────────────────────────────────────
+  ios-sideloadly:
+    name: "iOS — IPA para Sideloadly"
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: 3.47.2
+      xcode: 16.3
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.wigt"
+        APP_NAME: "Wigt"
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    scripts:
+      # 1. Instalar dependencias Flutter
+      - name: Instalar dependencias
+        script: flutter pub get
+
+      # 2. Generar código de drift y riverpod
+      - name: Generar código (build_runner)
+        script: dart run build_runner build --delete-conflicting-outputs
+
+      # 3. Análisis y tests
+      - name: Análisis estático
+        script: flutter analyze --no-fatal-warnings
+
+      - name: Tests unitarios
+        script: flutter test
+
+      # 4. Instalar dependencias iOS (CocoaPods)
+      - name: Instalar CocoaPods
+        script: |
+          cd ios
+          pod install
+
+      # 5. Compilar IPA sin firma (unsigned) — válida para Sideloadly
+      #    Sideloadly re-firma con tu Apple ID al instalar.
+      - name: Compilar IPA
+        script: |
+          flutter build ios --release --no-codesign
+          # Empaquetar el .app dentro de un Payload/ y comprimir como .ipa
+          mkdir -p build/ios/ipa/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -r ../../../Wigt.ipa Payload/
+
+      # 6. (Opcional) Compilar también el Android APK de paso
+      - name: Compilar APK Android
+        script: flutter build apk --release
+
+    artifacts:
+      # Archivos que Codemagic te entregará para descargar
+      - Wigt.ipa
+      - build/app/outputs/flutter-apk/app-release.apk
+      - flutter_drive.log
+
+    publishing:
+      email:
+        recipients:
+          - $CM_SUBMITTER_EMAIL   # Tu e-mail registrado en Codemagic
+        notify:
+          success: true
+          failure: true
+
+  # ─────────────────────────────────────────────
+  # 2. Android — APK de desarrollo rápido
+  # ─────────────────────────────────────────────
+  android-debug:
+    name: "Android — APK debug"
+    max_build_duration: 30
+    instance_type: linux_x2
+
+    environment:
+      flutter: 3.47.2
+      android_signing:
+        - wigt_keystore     # Configura en Codemagic > Code Signing (opcional)
+
+    scripts:
+      - name: Dependencias
+        script: flutter pub get
+
+      - name: Generar código
+        script: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Análisis
+        script: flutter analyze --no-fatal-warnings
+
+      - name: Tests
+        script: flutter test
+
+      - name: APK debug
+        script: flutter build apk --debug
+
+    artifacts:
+      - build/app/outputs/flutter-apk/app-debug.apk
+

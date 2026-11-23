@@ -1,0 +1,61 @@
+# ── Flutter / Dart ──────────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+*.iml
+
+# Código generado por drift / riverpod
+# (se regenera con build_runner)
+lib/**/*.g.dart
+lib/**/*.freezed.dart
+
+# ── Android ──────────────────────────────────────
+android/.gradle/
+android/captures/
+android/local.properties
+android/key.properties          # ← credenciales de firma (nunca subir)
+android/app/google-services.json
+
+# ── iOS ──────────────────────────────────────────
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/Podfile.lock
+ios/*.xcworkspace/xcuserdata/
+ios/**/*.xccheckout
+ios/**/*.moved-aside
+ios/Runner/GeneratedPluginRegistrant.*
+
+# ── Secretos y claves ────────────────────────────
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.cer
+google-services.json
+GoogleService-Info.plist
+
+# ── IDEs ─────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+
+# ── Codemagic / CI ──────────────────────────────
+# (codemagic.yaml SÍ se sube — es la config del build)
+Wigt.ipa
+app-release.apk
+app-debug.apk
+flutter_drive.log
+
+# ── Misc ────────────────────────────────────────
+*.log
+*.tmp
+assets/fonts/*_tmp/
+assets/fonts/*.zip
